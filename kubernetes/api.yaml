@@ -6,7 +6,7 @@ metadata:
   labels:
     app: annon
     component: api
-    version: "0.2.23"
+    version: "0.2.25"
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -19,11 +19,11 @@ spec:
       labels:
         app: annon
         component: api
-        version: "0.2.23"
+        version: "0.2.25"
     spec:
       containers:
       - name: annon-api
-        image: nebo15/annon_api:0.2.23
+        image: nebo15/annon_api:0.2.25
         imagePullPolicy: IfNotPresent
         ports:
         # This container port should match `GATEWAY_PUBLIC_PORT` env variable.
