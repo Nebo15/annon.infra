@@ -1,0 +1,60 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: gateway
+  name: db
+  labels:
+    app: annon
+    component: db
+    version: "9.6"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: annon
+        component: db
+        version: "9.6"
+    spec:
+      containers:
+      - name: postgres
+        image: nebo15/alpine-postgre:9.6.2
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 5432
+        env:
+          - name: POSTGRES_USER
+            value: "postgre"
+          - name: POSTGRES_PASSWORD
+            value: "postgre"
+          # Attach volume to this directory to persist data
+          - name: PGDATA
+            value: "/var/lib/postgre/data/pgdata"
+          - name: POSTGRES_DB
+            value: "postgre"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gateway
+  name: db-svc
+  labels:
+    app: annon
+    component: db
+spec:
+  ports:
+  - name: postgre
+    port: 5432
+    targetPort: 5432
+  selector:
+    app: annon
+    component: db
+  type: ClusterIP

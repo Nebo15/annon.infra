@@ -1,0 +1,151 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: gateway
+  name: gateway
+  labels:
+    app: annon
+    component: api
+    version: "0.2.23"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: annon
+      component: api
+  template:
+    metadata:
+      labels:
+        app: annon
+        component: api
+        version: "0.2.23"
+    spec:
+      containers:
+      - name: annon-api
+        image: nebo15/annon_api:0.2.23
+        imagePullPolicy: IfNotPresent
+        ports:
+        # This container port should match `GATEWAY_PUBLIC_PORT` env variable.
+        - containerPort: 4000
+          protocol: TCP
+          name: public-api
+        # This container port should match `GATEWAY_MANAGEMENT_PORT` env variable.
+        - containerPort: 4001
+          protocol: TCP
+          name: mngmnt-api
+        # This container port should match `GATEWAY_PRIVATE_PORT` env variable.
+        - containerPort: 4040
+          protocol: TCP
+          name: private-api
+        # EPMD port to allows nodes interconnection
+        - containerPort: 4369
+          name: epmd
+        env:
+        # Endpoints
+        ## This is a public port that will may be available to the Internet.
+        - name: GATEWAY_PUBLIC_PORT
+          value: "4000"
+        # This is a port used for management API, must be protected by a firewall.
+        - name: GATEWAY_MANAGEMENT_PORT
+          value: "4001"
+        # This is a port that can be used by cluster services to communicate with each-other,
+        # must be protected by a firewall.
+        - name: GATEWAY_PRIVATE_PORT
+          value: "4040"
+        # Database
+        - name: DB_NAME
+          value: "gateway"
+        - name: DB_USER
+          value: "db"
+        - name: DB_PASSWORD
+          value: "sDk39SkDkSdjlj38eovnehq"
+        - name: DB_HOST
+          value: "db-svc"
+        - name: DB_PORT
+          value: "5432"
+        - name: DB_POOL_SIZE
+          value: "100"
+        ## Run DB migrations on start?
+        - name: APP_MIGRATE
+          value: "true"
+        # Clustering
+        ## Which strategy to use?
+        - name: SKYCLUSTER_STRATEGY
+          value: "Cluster.Strategy.Kubernetes"
+        ## How to select gateway pods in kubernetes
+        - name: SKYCLUSTER_KUBERNATES_SELECTOR
+          value: "app=annon,component=api"
+        ## Name of a Annon's deployment
+        - name: SKYCLUSTER_KUBERNATES_NODE_BASENAME
+          value: "annon"
+        ## Erlang Cookie is used as access token to interconnect nodes. Make it strongly random.
+        - name: ERLANG_COOKIE
+          value: "cmFuZG9tQVNESmlqYXNkOTkzOENvb3NkbGtqc2RFcmxhbkNvb2sK"
+        ## This variable is used by Erlang VM for clustering
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        ## DogStatsD Host to report performance metrics
+        - name: STATSD_HOST
+          value: "datadog-agent-svc.monitoring"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+      imagePullSecrets:
+      - name: docker-hub-secret
+      volumes:
+        - name: docker-hub-secret
+          secret:
+            secretName: docker-hub-secret
+
+---
+# Service for management and private API's
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gateway
+  name: annon-svc
+  labels:
+    app: annon
+    component: api
+spec:
+  ports:
+  - port: 8080
+    targetPort: 4001
+    protocol: TCP
+    name: mngmnt-api
+  - port: 80
+    targetPort: 4040
+    protocol: TCP
+    name: private-api
+  selector:
+    app: annon
+    component: api
+  type: ClusterIP
+
+---
+# Internet-available service
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gateway
+  name: annon-public-svc
+  labels:
+    app: annon
+    component: api
+  # Tell Load Balancers to preserve consumer real IP
+  annotations:
+    service.beta.kubernetes.io/external-traffic: OnlyLocal
+spec:
+  ports:
+  - port: 80
+    targetPort: 4000
+    protocol: TCP
+    name: public-api
+  selector:
+    app: annon
+    component: api
+  type: LoadBalancer

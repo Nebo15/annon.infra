@@ -1,0 +1,78 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  namespace: gateway
+  name: dashboard
+  labels:
+    app: annon
+    component: dashboard
+    version: "1.0.27"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: annon
+      component: dashboard
+  template:
+    metadata:
+      labels:
+        app: annon
+        component: dashboard
+        version: "1.0.27"
+    spec:
+      containers:
+      - name: annon-web
+        image: nebo15/annon.web:1.0.27
+        imagePullPolicy: IfNotPresent
+        ports:
+        # This container port should match `PORT` env variable.
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        env:
+        # Port on which Dashboard is available
+        - name: PORT
+          value: "8080"
+        # Management API endpoint
+        - name: MANAGEMENT_ENDPOINT
+          value: "http://annon-svc.gateway:8080"
+        # Publicly available API endpoint URL
+        - name: PUBLIC_ENDPOINT
+          value: "http://mydomain.example.com/"
+        # Tracer URL pattern
+        # We use link to Google Cloud logs to see all logs related to Request
+        - name: TRACER_URL
+          value: "https://console.cloud.google.com/logs/viewer?project=myproject-162117&resource=container%2Fcluster_name%2Fdemo%2Fnamespace_id%2Fprm&advancedFilter=resource.type%3D%22container%22%0AtextPayload%3A%22{request_id}%22"
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      imagePullSecrets:
+      - name: docker-hub-secret
+      volumes:
+        - name: docker-hub-secret
+          secret:
+            secretName: docker-hub-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: gateway
+  name: web-svc
+  labels:
+    app: annon
+    component: dashboard
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: annon
+    component: dashboard
+  # Warning! This will make Dashboard publicly available,
+  # make it private and add authorization on top of it (probably with Annon itself).
+  type: LoadBalancer
