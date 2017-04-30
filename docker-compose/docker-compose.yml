@@ -38,7 +38,7 @@ services:
       - "4001:4001"
       - "4002:4002"
   postgres:
-    image: "nebo15/alpine-postgres:9.6.2"
+    image: "nebo15/alpine-postgre:9.6.2"
     ports:
       - "5432"
     environment:
