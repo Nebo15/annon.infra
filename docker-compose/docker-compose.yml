@@ -13,19 +13,20 @@ services:
       - "8080:8080"
   api:
     restart: "always"
-    image: "nebo15/gateway:latest"
+    image: "nebo15/annon_api:latest"
     links:
       - "postgres:postgres"
     depends_on:
       - postgres
     environment:
-      - DB_NAME=gateway
+      - DB_NAME=annon
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_HOST=postgres
       - DB_PORT=5432
       - GATEWAY_PUBLIC_PORT=4000
       - GATEWAY_MANAGEMENT_PORT=4001
+      - GATEWAY_PRIVATE_PORT=4002
       - ERLANG_COOKIE=c2VjcmV0X2VybGFuZ19jb29raWUK
       - LISTEN_DIST_MIN=10000
       - LISTEN_DIST_MAX=10100
@@ -35,13 +36,14 @@ services:
     ports:
       - "4000:4000"
       - "4001:4001"
+      - "4002:4002"
   postgres:
-    image: "postgres:alpine"
+    image: "nebo15/alpine-postgres:9.6.2"
     ports:
       - "5432"
     environment:
-      - POSTGRES_DB=gateway
+      - POSTGRES_DB=annon
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-    volumes:
-      - '.postgres:/var/lib/postgresql/data'
+    # volumes:
+    #   - '.postgres:/var/lib/postgresql/data'

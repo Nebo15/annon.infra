@@ -3,6 +3,9 @@
 Infrastructure helpers for [Annon API Gateway](http://docs.annon.apiary.io/):
 
 1. Sample [Docker Compose files](/docker-compose) and one-click-install bash script.
+
+  `curl -L http://bit.ly/annon_compose | bash`
+
 2. [Kubernetes config](/kubernetes) examples.
 
 ## Environment Variables
