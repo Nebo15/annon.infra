@@ -41,6 +41,8 @@ Also sample `.env` can be used as payload for `docker run` cli.
 
 ### Database
 
+You can set individual DB connection options that will apply for both configurations and requests connections:
+
 | VAR_NAME      | Default Value | Description |
 | ------------- | ------------- | ----------- |
 | `DB_NAME`     | `annon`       | Database name. |
@@ -49,6 +51,13 @@ Also sample `.env` can be used as payload for `docker run` cli.
 | `DB_HOST`     | `travis`      | Database host. |
 | `DB_PORT`     | `5432`        | Database port. |
 | `DB_MIGRATE`  | `true`        | Migrate database when container starts. |
+
+Our you can set separately via DB connection URLs:
+
+| VAR_NAME                     | Default Value | Description |
+| ---------------------------- | ------------- | ----------- |
+| `CONFIGURATION_DATABASE_URL` | not set       | URL with configurations DB connection settings, example: `postgres://postgres:postgres@travis:5432/annon`. |
+| `REQUESTS_DATABASE_URL`      | not set       | URL with requests DB connection settings, example: `postgres://postgres:postgres@travis:5432/annon`. |
 
 ### Monitoring
 
