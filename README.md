@@ -18,6 +18,7 @@ Also sample `.env` can be used as payload for `docker run` cli.
 | VAR_NAME      | Default Value           | Description |
 | ------------- | ----------------------- | ----------- |
 | `LOG_LEVEL`   | `info` | Elixir Logger severity level. Possible values: `debug`, `info`, `warn`, `error`. |
+| `PROTECTED_HEADERS` | `x-consumer-id,x-consumer-scope,x-consumer-token,x-consumer-token-id` | Comma-separated list of headers which are ignored when received from API consumers. |
 
 ### Clustering
 
