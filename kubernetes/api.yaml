@@ -76,9 +76,9 @@ spec:
         ## How to select gateway pods in kubernetes
         - name: SKYCLUSTER_KUBERNETES_SELECTOR
           value: "app=annon,component=api"
-        ## Name of a Annon's deployment
-        - name: SKYCLUSTER_KUBERNETES_NODE_BASENAME
-          value: "annon"
+        ## Name of a Annon's OTP app.
+        - name: SKYCLUSTER_NODE_NAME
+          value: "annon_api"
         ## Erlang Cookie is used as access token to interconnect nodes. Make it strongly random.
         - name: ERLANG_COOKIE
           value: "cmFuZG9tQVNESmlqYXNkOTkzOENvb3NkbGtqc2RFcmxhbkNvb2sK"

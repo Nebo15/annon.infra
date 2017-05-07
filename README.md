@@ -30,7 +30,7 @@ Also sample `.env` can be used as payload for `docker run` cli.
 | `POD_IP`          | `127.0.0.1`             | Node IP address. (Should be correct for clustering to work.) |
 | `SKYCLUSTER_STRATEGY`                 | `Cluster.Strategy.Epmd`   | Which strategy to use? |
 | `SKYCLUSTER_KUBERNETES_SELECTOR`      | `app=annon,component=api` | How to select gateway pods in kubernetes |
-| `SKYCLUSTER_KUBERNETES_NODE_BASENAME` | `gateway`                 | Name of a Annon's deployment |
+| `SKYCLUSTER_NODE_NAME` | `annon_api`                 | OTP application name. |
 
 ### HTTP Endpoints
 
