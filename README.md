@@ -22,6 +22,8 @@ Also sample `.env` can be used as payload for `docker run` cli.
 
 ### Monitoring
 
+#### StatsD Metrics Collection
+
 | VAR_NAME                        | Default Value | Description |
 | ------------------------------- | ------------- | ----------- |
 | `METRICS_COLLECTOR_ENABLED`     | `true`        | Enables or disables sending of metrics to the StatsD server. |
@@ -70,10 +72,3 @@ Our you can set separately via DB connection URLs:
 | ---------------------------- | ------------- | ----------- |
 | `CONFIGURATION_DATABASE_URL` | not set       | URL with configurations DB connection settings, example: `postgres://postgres:postgres@travis:5432/annon`. |
 | `REQUESTS_DATABASE_URL`      | not set       | URL with requests DB connection settings, example: `postgres://postgres:postgres@travis:5432/annon`. |
-
-### Monitoring
-
-# StatsD
-| VAR_NAME      | Default Value | Description |
-| ------------- | ------------- | ----------- |
-| `STATSD_HOST` | `travis`      | DogStatsD server hostname. |
