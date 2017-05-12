@@ -20,6 +20,17 @@ Also sample `.env` can be used as payload for `docker run` cli.
 | `LOG_LEVEL`   | `info` | Elixir Logger severity level. Possible values: `debug`, `info`, `warn`, `error`. |
 | `PROTECTED_HEADERS` | `x-consumer-id,x-consumer-scope,x-consumer-token,x-consumer-token-id` | Comma-separated list of headers which are ignored when received from API consumers. |
 
+### Monitoring
+
+| VAR_NAME                        | Default Value | Description |
+| ------------------------------- | ------------- | ----------- |
+| `METRICS_COLLECTOR_ENABLED`     | `true`        | Enables or disables sending of metrics to the StatsD server. |
+| `METRICS_COLLECTOR_SEND_TAGS`   | `true`        | Set to fails it StatsD server does not support metrics tags. |
+| `METRICS_COLLECTOR_HOST`        | `localhost`   | Host of a StatsD server. |
+| `METRICS_COLLECTOR_PORT`        | `32768`       | Port of a StatsD server. |
+| `METRICS_COLLECTOR_NAMESPACE`   | `annon`       | Name prefix for metrics. |
+| `METRICS_COLLECTOR_SAMPLE_RATE` | `0.25`        | Metrics sample rate. |
+
 ### Clustering
 
 | VAR_NAME          | Default Value           | Description |
