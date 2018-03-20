@@ -4,7 +4,9 @@ Infrastructure helpers for [Annon API Gateway](http://docs.annon.apiary.io/):
 
 1. Sample [Docker Compose files](/docker-compose) and one-click-install bash script.
 
-  `curl -L http://bit.ly/annon_compose | bash`
+    `curl -L http://bit.ly/annon_compose | bash`
+  
+  After Annon is started, open http://localhost:8080/apis for Management UI, http://localhost:4000/ for public API and http://localhost:4001/ for management API.
 
 2. [Kubernetes config](/kubernetes) examples.
 
